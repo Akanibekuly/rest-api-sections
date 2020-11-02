@@ -40,28 +40,33 @@ class User:
         return user
 
 class UserRegister(Resource):
-    parser=reqparse.RequestParser()
+    TABLE_NAME = 'users'
+
+    parser = reqparse.RequestParser()
     parser.add_argument('username',
-            type=str,
-            required=True,
-            help="This field cannot be left blank!"
-    )
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
     parser.add_argument('password',
-            type=str,
-            required=True,
-            help="This field cannot be left blank!"
-    )
-    
-    def Post(self):
-        connection=sqlite3.connect('data.db')
-        cursor=connection.cursor()
-        data=UserRegister.parser.parse_args()
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
 
-        query="INSERT INTO users VALUES (NULL, ?, ?)"
+    def post(self):
+        data = UserRegister.parser.parse_args()
 
-        cursor.execute(query, (data['username'],data['password']))
+        if User.find_by_username(data['username']):
+            return {'message': 'A user with that name already exists.'},400
+
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "INSERT INTO {table} VALUES (NULL, ?, ?)".format(table=self.TABLE_NAME)
+        cursor.execute(query, (data['username'], data['password']))
 
         connection.commit()
         connection.close()
 
-        return {'massage': 'User created succesfuuly!'}, 201 
+        return {"message": "User created successfully."}, 201
