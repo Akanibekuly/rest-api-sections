@@ -4,6 +4,7 @@ from flask_jwt import JWT, jwt_required
 
 from security import authenticate, identity
 
+
 app=Flask(__name__)
 app.secret_key='jose'
 api=Api(app)
