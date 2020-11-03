@@ -52,7 +52,7 @@ class Item(Resource):
         item=ItemModel.find_by_name(name)
 
         if item is None: 
-            item=ItemModel.find_by_name(name,data['price'])
+            item=ItemModel(name,data['price'])
         else:
             item.price=data['price']
         
