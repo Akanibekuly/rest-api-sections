@@ -2,7 +2,7 @@ from werkzeug.security import safe_str_cmp
 from models.user import UserModel
 
 users=[
-    UserModel(1,'bob','asdf')
+    UserModel('bob','asdf')
 ]
 
 def authenticate(username,password):
